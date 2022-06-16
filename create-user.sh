@@ -27,6 +27,4 @@ then
 fi
 
 # Api call
-curl -X POST http://localhost:8080/users 
--H 'Content-Type: application/json' 
--d '{"givenName": "$1", "familyName": "$2", "email": "$3", "password":"$4", "birthDate": null}'
+curl -X POST http://localhost:8080/users -H 'Content-Type: application/json' -d '{"givenName": "'"$1"'", "familyName": "'"$2"'", "email": "'"$3"'", "birthDate": null, "password": "'"$4"'"}'

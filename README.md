@@ -8,3 +8,10 @@ URL example: http://localhost:8080/users
 - MySQL dummy data via docker-entrypoint-initdb.d
 - API: routes to actions, sort, search
 - Database: MySQL connection in DI Container, *user:create* shell command with composer
+- No JWT auth
+
+**Steps**
+
+1. Clone repo
+2. docker-compose up --build
+3. composer user:create <params...>
