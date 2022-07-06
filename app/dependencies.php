@@ -8,6 +8,7 @@ use Monolog\Logger;
 use Monolog\Processor\UidProcessor;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
+use Tuupola\Middleware\JwtAuthentication;
 
 return function (ContainerBuilder $containerBuilder) {
     $containerBuilder->addDefinitions([
@@ -25,7 +26,7 @@ return function (ContainerBuilder $containerBuilder) {
 
             return $logger;
         },
-        PDO::class => function(ContainerInterface $c){
+        PDO::class => function (ContainerInterface $c) {
             $settings = $c->get(SettingsInterface::class);
             $dbSettings = $settings->get('db');
 
@@ -34,6 +35,25 @@ return function (ContainerBuilder $containerBuilder) {
             $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 
             return $pdo;
+        },
+        JwtAuthentication::class => function (ContainerInterface $c) {
+            $settings = $c->get(SettingsInterface::class);
+            $jwtSettings = $settings->get('jwt');
+
+            $jwt = new Tuupola\Middleware\JwtAuthentication([
+                "secret" => $jwtSettings['secret'],
+                "rules" => [
+                    new Tuupola\Middleware\JwtAuthentication\RequestPathRule([
+                        "path" => "/",
+                        "ignore" => ["/login"]
+                    ]),
+                    new Tuupola\Middleware\JwtAuthentication\RequestMethodRule([
+                        "ignore" => ["OPTIONS"]
+                    ])
+                ]
+            ]);
+            
+            return $jwt;
         }
     ]);
 };

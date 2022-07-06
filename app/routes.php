@@ -18,6 +18,11 @@ return function (App $app) {
     });
 
     /**
+     * Login
+     */
+    $app->post('/login', \App\Application\Actions\LoginAction::class);
+    
+    /**
      * Users
      */
     $app->group('/users', function (Group $group) {

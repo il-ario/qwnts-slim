@@ -25,6 +25,9 @@ return function (ContainerBuilder $containerBuilder) {
                     'dbname' => 'qwnts',
                     'user' => 'qwnts',
                     'password' => 'password',
+                ],
+                'jwt' => [
+                    'secret' => 'secretkey'
                 ]
             ]);
         }
