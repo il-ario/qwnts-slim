@@ -16,13 +16,7 @@ class StorePostAction extends PostAction
     {
         $parsedBody = $request->getParsedBody();
 
-        $db = $this->container->get(PDO::class);
-        $query = $db->prepare('INSERT INTO posts (title, body, status) VALUES (?, ?, ?)');
-        $data = $query->execute([
-            $parsedBody['title'],
-            $parsedBody['body'],
-            $parsedBody['status']
-        ]);
+        $data = $this->postRepository->store($parsedBody);
         
         return $this->respondWithData($data)->withHeader('Content-Type', 'application/json')->withStatus(200);
     }

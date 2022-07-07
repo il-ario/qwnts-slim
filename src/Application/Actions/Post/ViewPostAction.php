@@ -16,10 +16,7 @@ class ViewPostAction extends PostAction
     {
         $id = $this->resolveArg('id');
 
-        $db = $this->container->get(PDO::class);
-        $query = $db->prepare("SELECT * FROM posts WHERE id = '$id'");
-        $query->execute();
-        $data = $query->fetchAll(PDO::FETCH_ASSOC);
+        $data = $this->postRepository->view((int) $id);
         
         return $this->respondWithData($data)->withHeader('Content-Type', 'application/json')->withStatus(200);
     }

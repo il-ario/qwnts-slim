@@ -16,16 +16,8 @@ class UpdateUserAction extends UserAction
     {
         $email = $this->resolveArg('email');
         $parsedBody = $request->getParsedBody();
-        
-        $db = $this->container->get(PDO::class);
-        $query = $db->prepare("UPDATE users SET givenName = ?, familyName = ?, email = ?, birthDate = ?, password = ? WHERE email = '$email'");
-        $data = $query->execute([
-            $parsedBody['givenName'],
-            $parsedBody['familyName'],
-            $parsedBody['email'],
-            $parsedBody['birthDate'],
-            sha1($parsedBody['password'])
-        ]);
+
+        $data = $this->userRepository->update($email, $parsedBody);
 
         return $this->respondWithData($data)->withHeader('Content-Type', 'application/json')->withStatus(200);
     }

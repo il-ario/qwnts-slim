@@ -16,22 +16,9 @@ class ListPostsAction extends PostAction
      */
     protected function action(Request $request): Response
     {
-        $q = null;
         $parsedBody = $request->getQueryParams();
-        
-        if (array_key_exists('q', $parsedBody)) {
-            $q = $parsedBody['q'];
-        }
 
-        $db = $this->container->get(PDO::class);
-
-        if (! is_null($q)) {
-            $query = $db->query("SELECT * FROM posts WHERE title LIKE '%$q%' OR body LIKE '%$q%'");
-        } else {
-            $query = $db->query('SELECT * FROM posts');
-        }
-        
-        $data = $query->fetchAll(PDO::FETCH_ASSOC);
+        $data = $this->postRepository->list($parsedBody);
 
         return $this->respondWithData($data)->withHeader('Content-Type', 'application/json')->withStatus(200);
     }

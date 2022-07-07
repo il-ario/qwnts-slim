@@ -16,14 +16,8 @@ class UpdatePostAction extends PostAction
     {
         $parsedBody = $request->getParsedBody();
         $id = $this->resolveArg('id');
-        
-        $db = $this->container->get(PDO::class);
-        $query = $db->prepare("UPDATE posts SET title = ?, body = ?, status = ? WHERE id = $id");
-        $data = $query->execute([
-            $parsedBody['title'],
-            $parsedBody['body'],
-            $parsedBody['status']
-        ]);
+
+        $data = $this->postRepository->update((int) $id, $parsedBody);
 
         return $this->respondWithData($data)->withHeader('Content-Type', 'application/json')->withStatus(200);
     }
