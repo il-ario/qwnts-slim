@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace App\Domain\User;
 
 use JsonSerializable;
+use Spatie\DataTransferObject\DataTransferObject;
 
-class User implements JsonSerializable
+class User extends DataTransferObject implements JsonSerializable
 {
     private ?int $id;
 

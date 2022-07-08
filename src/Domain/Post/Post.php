@@ -5,14 +5,18 @@ declare(strict_types=1);
 namespace App\Domain\Post;
 
 use JsonSerializable;
+use App\Domain\Post\Validation\StringNotEmpty;
+use Spatie\DataTransferObject\DataTransferObject;
 
-class Post implements JsonSerializable
+class Post extends DataTransferObject implements JsonSerializable
 {
     private ?int $id;
 
-    private string $title;
+    #[StringNotEmpty]
+    public string $title;
 
-    private string $body;
+    #[StringNotEmpty]
+    public string $body;
 
     private string $status;
 

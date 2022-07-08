@@ -12,8 +12,6 @@ services:
         MYSQL_USER: qwnts
         MYSQL_PASSWORD: password
         LANG: C.UTF-8
-    volumes: 
-       - ./docker/mysql/init:/docker-entrypoint-initdb.d
 
   php:
     container_name: qwnts_slim_php

@@ -7,7 +7,6 @@ use DI\ContainerBuilder;
 use Monolog\Logger;
 
 return function (ContainerBuilder $containerBuilder) {
-
     // Global Settings Object
     $containerBuilder->addDefinitions([
         SettingsInterface::class => function () {
@@ -21,13 +20,13 @@ return function (ContainerBuilder $containerBuilder) {
                     'level' => Logger::DEBUG,
                 ],
                 'db' => [
-                    'host' => 'mysql',
-                    'dbname' => 'qwnts',
-                    'user' => 'qwnts',
-                    'password' => 'password',
+                    'host' => getenv('DB_HOST'),
+                    'dbname' => getenv('DB_NAME'),
+                    'user' => getenv('DB_USER'),
+                    'password' => getenv('DB_PASSWORD'),
                 ],
                 'jwt' => [
-                    'secret' => 'secretkey'
+                    'secret' => getenv('JWT_SECRET')
                 ]
             ]);
         }
