@@ -11,11 +11,13 @@ use Psr\Log\LoggerInterface;
 abstract class PostAction extends Action
 {
     protected PostRepository $postRepository;
+    protected string $tableName;
 
     public function __construct(LoggerInterface $logger, ContainerInterface $container, PostRepository $postRepository)
     {
         parent::__construct($logger, $container);
         $this->postRepository = $postRepository;
+        $this->tableName = 'posts';
     }
 }
 

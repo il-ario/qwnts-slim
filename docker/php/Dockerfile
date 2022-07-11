@@ -1,7 +1,7 @@
 FROM php:8.0-fpm
 
 RUN apt update \
-    && apt install -y zlib1g-dev g++ git libicu-dev zip libzip-dev zip libpq-dev \
+    && apt install -y zlib1g-dev g++ git nano libicu-dev zip libzip-dev zip libpq-dev \
     && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
     && docker-php-ext-install intl opcache pdo pdo_pgsql pdo_mysql \
     && pecl install apcu \

@@ -1,23 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Application\Actions;
+namespace App\Application\Actions\User;
 
 use App\Application\Settings\SettingsInterface;
 use Firebase\JWT\JWT;
-use PDO;
-use Psr\Log\LoggerInterface;
-use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-class LoginAction extends Action
+class LoginUserAction extends UserAction
 {
-    public function __construct(LoggerInterface $logger, ContainerInterface $container)
-    {
-        parent::__construct($logger, $container);
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -27,10 +19,7 @@ class LoginAction extends Action
         $email = $parsedBody['email'];
         $password = $parsedBody['password'];
 
-        $db = $this->container->get(PDO::class);
-        $query = $db->prepare("SELECT * FROM users WHERE email = '$email'");
-        $query->execute();
-        $data = $query->fetchAll(PDO::FETCH_ASSOC);
+        $data = $this->userRepository->get($email);
 
         if (sha1($password) != $data[0]['password']) {
             return $this->respondWithData($data)->withHeader('Content-Type', 'application/json')->withStatus(401);

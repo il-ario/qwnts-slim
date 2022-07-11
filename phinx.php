@@ -1,6 +1,6 @@
 <?php
-return 
-[
+
+return [
     'paths' => [
         'migrations' => '%%PHINX_CONFIG_DIR%%/db/migrations',
         'seeds' => '%%PHINX_CONFIG_DIR%%/db/seeds'
@@ -19,10 +19,14 @@ return
         ],
         'development' => [
             'adapter' => 'mysql',
-            'host' => getenv('DB_HOST', true),
-            'name' => getenv('DB_NAME', true),
-            'user' => getenv('DB_USER', true),
-            'pass' => getenv('DB_PASSWORD', true),
+            'host' => 'mysql',
+            'name' => 'qwnts',
+            'user' => 'qwnts',
+            'pass' => 'password',
+            // 'host' => getenv('DB_HOST'),
+            // 'name' => getenv('DB_NAME'),
+            // 'user' => getenv('DB_USER'),
+            // 'pass' => getenv('DB_PASSWORD'),
             'port' => '3306',
             'charset' => 'utf8',
         ],

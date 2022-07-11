@@ -3,19 +3,19 @@ declare(strict_types=1);
 
 namespace App\Domain\User;
 
-use PDO;
+use Doctrine\DBAL\Connection;
 
 class UserRepository
 {
     /**
-     * @var PDO
+     * @var Connection
      */
-    protected PDO $connection;
+    protected Connection $connection;
 
     /**
-     * @param PDO $connection
+     * @param Connection $connection
      */
-    public function __construct(PDO $connection)
+    public function __construct(Connection $connection)
     {   
         $this->connection = $connection;
     }
@@ -27,32 +27,32 @@ class UserRepository
      */
     public function list(array $params)
     {
-        $statement = 'SELECT * FROM users';
-
+        $statement = "SELECT * FROM users";
+        
         /**
          * If sort options are present, compose the query statement
          */
         if (array_key_exists('sort', $params)) {
             $length = count($params['sort']);
-            $statement .= ' ORDER BY ';
+            $statement .= " ORDER BY ";
             
             foreach ($params['sort'] as $key => $value) {
                 $statement .= substr($value, 1);
 
                 if (substr($value, 0, 1) === '-') {
-                    $statement .= ' DESC ';
+                    $statement .= " DESC ";
                 } else {
-                    $statement .= ' ASC ';
+                    $statement .= " ASC ";
                 }
 
                 if (! $key == $length) {
-                    $statement .= ', ';
+                    $statement .= ", ";
                 }
             }
         }
 
-        $query = $this->connection->query($statement);
-        $data = $query->fetchAll(PDO::FETCH_ASSOC);
+        $query = $this->connection->prepare($statement);
+        $data = $query->execute()->fetchAll(\PDO::FETCH_ASSOC);
 
         return $data;
     }
@@ -64,14 +64,15 @@ class UserRepository
      */
     public function store(array $params)
     {
-        $query = $this->connection->prepare('INSERT INTO users (givenName, familyName, email, birthDate, password) VALUES (?, ?, ?, ?, ?)');
-        $data = $query->execute([
-            $params['givenName'],
-            $params['familyName'],
-            $params['email'],
-            $params['birthDate'],
-            sha1($params['password'])
-        ]);
+        $statement = "INSERT INTO users (givenName, familyName, email, birthDate, password) VALUES (?, ?, ?, ?, ?)";
+        
+        $query = $this->connection->prepare($statement);
+        $query->bindValue(1, $params['givenName']);
+        $query->bindValue(2, $params['familyName']);
+        $query->bindValue(3, $params['email']);
+        $query->bindValue(4, $params['birthDate']);
+        $query->bindValue(5, sha1($params['password']));
+        $data = $query->executeQuery();
 
         return $data;
     }
@@ -81,11 +82,12 @@ class UserRepository
      * 
      * @param string $email
      */
-    public function view(string $email)
+    public function get(string $email)
     {
-        $query = $this->connection->prepare("SELECT * FROM users WHERE email = '$email'");
-        $query->execute();
-        $data = $query->fetchAll(PDO::FETCH_ASSOC);
+        $statement = "SELECT * FROM users WHERE email = '$email'";
+
+        $query = $this->connection->prepare($statement);
+        $data = $query->execute()->fetchAll(\PDO::FETCH_ASSOC);
 
         return $data;
     }
@@ -98,14 +100,15 @@ class UserRepository
      */
     public function update(string $email, array $params)
     {
-        $query = $this->connection->prepare("UPDATE users SET givenName = ?, familyName = ?, email = ?, birthDate = ?, password = ? WHERE email = '$email'");
-        $data = $query->execute([
-            $params['givenName'],
-            $params['familyName'],
-            $params['email'],
-            $params['birthDate'],
-            sha1($params['password'])
-        ]);
+        $statement = "UPDATE users SET givenName = ?, familyName = ?, email = ?, birthDate = ?, password = ? WHERE email = '$email'";
+        
+        $query = $this->connection->prepare($statement);
+        $query->bindValue(1, $params['givenName']);
+        $query->bindValue(2, $params['familyName']);
+        $query->bindValue(3, $params['email']);
+        $query->bindValue(4, $params['birthDate']);
+        $query->bindValue(5, sha1($params['password']));
+        $data = $query->executeQuery();
 
         return $data;
     }
@@ -117,9 +120,10 @@ class UserRepository
      */
     public function delete(string $email)
     {
-        $query = $this->connection->prepare("DELETE FROM users WHERE email = '$email'");
-        $query->execute();
-        $data = $query->fetchAll(PDO::FETCH_ASSOC);
+        $statement = "DELETE FROM users WHERE email = '$email'";
+
+        $query = $this->connection->prepare($statement);
+        $data = $query->executeQuery();
 
         return $data;
     }

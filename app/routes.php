@@ -20,7 +20,7 @@ return function (App $app) {
     /**
      * Login
      */
-    $app->post('/login', \App\Application\Actions\LoginAction::class);
+    $app->post('/login', \App\Application\Actions\User\LoginUserAction::class);
     
     /**
      * Users

@@ -7,10 +7,10 @@ services:
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     restart: always
     environment: 
-        MYSQL_ROOT_PASSWORD: root
-        MYSQL_DATABASE: qwnts
-        MYSQL_USER: qwnts
-        MYSQL_PASSWORD: password
+        MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+        MYSQL_DATABASE: ${DB_NAME}
+        MYSQL_USER: ${DB_USER}
+        MYSQL_PASSWORD: ${DB_PASSWORD}
         LANG: C.UTF-8
 
   php:

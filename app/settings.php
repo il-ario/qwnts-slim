@@ -20,13 +20,18 @@ return function (ContainerBuilder $containerBuilder) {
                     'level' => Logger::DEBUG,
                 ],
                 'db' => [
-                    'host' => getenv('DB_HOST'),
-                    'dbname' => getenv('DB_NAME'),
-                    'user' => getenv('DB_USER'),
-                    'password' => getenv('DB_PASSWORD'),
+                    'host' => 'mysql',
+                    'dbname' => 'qwnts',
+                    'user' => 'qwnts',
+                    'password' => 'password',
+                    // 'host' => getenv('DB_HOST'),
+                    // 'dbname' => getenv('DB_NAME'),
+                    // 'user' => getenv('DB_USER'),
+                    // 'password' => getenv('DB_PASSWORD'),
                 ],
                 'jwt' => [
-                    'secret' => getenv('JWT_SECRET')
+                    'secret' => 'secretKey'
+                    // 'secret' => getenv('JWT_SECRET')
                 ]
             ]);
         }

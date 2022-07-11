@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 use App\Application\Settings\SettingsInterface;
 use DI\ContainerBuilder;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Configuration;
+use Doctrine\DBAL\DriverManager;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Monolog\Processor\UidProcessor;
@@ -26,15 +29,28 @@ return function (ContainerBuilder $containerBuilder) {
 
             return $logger;
         },
-        PDO::class => function (ContainerInterface $c) {
+        Connection::class => function (ContainerInterface $c) {
             $settings = $c->get(SettingsInterface::class);
             $dbSettings = $settings->get('db');
 
-            $pdo = new PDO('mysql:host='.$dbSettings['host'].';charset=utf8mb4;dbname='.$dbSettings['dbname'], $dbSettings['user'], $dbSettings['password']);
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+            $config = new Configuration();
+            $connectionParams = [
+                'dbname' => $dbSettings['dbname'],
+                'user' => $dbSettings['user'],
+                'password' => $dbSettings['password'],
+                'host' => $dbSettings['host'],
+                'charset' => 'utf8mb4',
+                'driver' => 'pdo_mysql',
+                'unix_socket' => null,
+                // 'port' => 3306,
+            ];
 
-            return $pdo;
+            try {
+                return DriverManager::getConnection($connectionParams, $config);
+            } catch (\Exception $e) {
+                echo $e->getMessage();
+                die();
+            }
         },
         JwtAuthentication::class => function (ContainerInterface $c) {
             $settings = $c->get(SettingsInterface::class);

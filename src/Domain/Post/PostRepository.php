@@ -3,19 +3,19 @@ declare(strict_types=1);
 
 namespace App\Domain\Post;
 
-use PDO;
+use Doctrine\DBAL\Connection;
 
 class PostRepository
 {
     /**
-     * @var PDO
+     * @var Connection
      */
-    protected PDO $connection;
+    protected Connection $connection;
 
     /**
-     * @param PDO $connection
+     * @param Connection $connection
      */
-    public function __construct(PDO $connection)
+    public function __construct(Connection $connection)
     {   
         $this->connection = $connection;
     }
@@ -33,12 +33,13 @@ class PostRepository
         }
 
         if (! is_null($q)) {
-            $query = $this->connection->query("SELECT * FROM posts WHERE title LIKE '%$q%' OR body LIKE '%$q%'");
+            $statement = "SELECT * FROM posts WHERE title LIKE '%$q%' OR body LIKE '%$q%'";
         } else {
-            $query = $this->connection->query('SELECT * FROM posts');
+            $statement = "SELECT * FROM posts";
         }
         
-        $data = $query->fetchAll(PDO::FETCH_ASSOC);
+        $query = $this->connection->prepare($statement);
+        $data = $query->execute()->fetchAll(\PDO::FETCH_ASSOC);
 
         return $data;
     }
@@ -50,12 +51,13 @@ class PostRepository
      */
     public function store(array $params)
     {
-        $query = $this->connection->prepare('INSERT INTO posts (title, body, status) VALUES (?, ?, ?)');
-        $data = $query->execute([
-            $params['title'],
-            $params['body'],
-            $params['status']
-        ]);
+        $statement = "INSERT INTO posts (title, body, status) VALUES (?, ?, ?)";
+        
+        $query = $this->connection->prepare($statement);
+        $query->bindValue(1, $params['title']);
+        $query->bindValue(2, $params['body']);
+        $query->bindValue(3, $params['status']);
+        $data = $query->executeQuery();
 
         return $data;
     }
@@ -65,11 +67,11 @@ class PostRepository
      * 
      * @param int $id
      */
-    public function view(int $id)
+    public function get(int $id)
     {
         $query = $this->connection->prepare("SELECT * FROM posts WHERE id = '$id'");
         $query->execute();
-        $data = $query->fetchAll(PDO::FETCH_ASSOC);
+        $data = $query->fetchAll(\PDO::FETCH_ASSOC);
 
         return $data;
     }
@@ -82,12 +84,13 @@ class PostRepository
      */
     public function update(int $id, array $params)
     {
-        $query = $this->connection->prepare("UPDATE posts SET title = ?, body = ?, status = ? WHERE id = $id");
-        $data = $query->execute([
-            $params['title'],
-            $params['body'],
-            $params['status']
-        ]);
+        $statement = "UPDATE posts SET title = ?, body = ?, status = ? WHERE id = $id";
+        
+        $query = $this->connection->prepare($statement);
+        $query->bindValue(1, $params['title']);
+        $query->bindValue(2, $params['body']);
+        $query->bindValue(3, $params['status']);
+        $data = $query->executeQuery();
 
         return $data;
     }

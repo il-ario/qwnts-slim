@@ -16,7 +16,7 @@ class ViewPostAction extends PostAction
     {
         $id = $this->resolveArg('id');
 
-        $data = $this->postRepository->view((int) $id);
+        $data = $this->postRepository->get((int) $id);
         
         return $this->respondWithData($data)->withHeader('Content-Type', 'application/json')->withStatus(200);
     }
