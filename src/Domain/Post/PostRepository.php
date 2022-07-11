@@ -5,7 +5,7 @@ namespace App\Domain\Post;
 
 use Doctrine\DBAL\Connection;
 
-class PostRepository
+class PostRepository implements PostRepositoryInterface
 {
     /**
      * @var Connection
@@ -20,7 +20,7 @@ class PostRepository
         $this->connection = $connection;
     }
 
-     /**
+    /**
      * List posts
      * 
      * @param array $params
@@ -51,12 +51,14 @@ class PostRepository
      */
     public function store(array $params)
     {
-        $statement = "INSERT INTO posts (title, body, status) VALUES (?, ?, ?)";
+        $statement = "INSERT INTO posts (title, body, status, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?)";
         
         $query = $this->connection->prepare($statement);
         $query->bindValue(1, $params['title']);
         $query->bindValue(2, $params['body']);
         $query->bindValue(3, $params['status']);
+        $query->bindValue(4, date('Y-m-d H:i:s'));
+        $query->bindValue(5, date('Y-m-d H:i:s'));
         $data = $query->executeQuery();
 
         return $data;
@@ -84,12 +86,13 @@ class PostRepository
      */
     public function update(int $id, array $params)
     {
-        $statement = "UPDATE posts SET title = ?, body = ?, status = ? WHERE id = $id";
+        $statement = "UPDATE posts SET title = ?, body = ?, status = ?, updatedAt = ? WHERE id = $id";
         
         $query = $this->connection->prepare($statement);
         $query->bindValue(1, $params['title']);
         $query->bindValue(2, $params['body']);
         $query->bindValue(3, $params['status']);
+        $query->bindValue(4, date('Y-m-d H:i:s'));
         $data = $query->executeQuery();
 
         return $data;

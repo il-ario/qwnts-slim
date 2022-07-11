@@ -5,7 +5,7 @@ namespace App\Domain\User;
 
 use Doctrine\DBAL\Connection;
 
-class UserRepository
+class UserRepository implements UserRepositoryInterface
 {
     /**
      * @var Connection
@@ -64,7 +64,7 @@ class UserRepository
      */
     public function store(array $params)
     {
-        $statement = "INSERT INTO users (givenName, familyName, email, birthDate, password) VALUES (?, ?, ?, ?, ?)";
+        $statement = "INSERT INTO users (givenName, familyName, email, birthDate, password, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?)";
         
         $query = $this->connection->prepare($statement);
         $query->bindValue(1, $params['givenName']);
@@ -72,6 +72,8 @@ class UserRepository
         $query->bindValue(3, $params['email']);
         $query->bindValue(4, $params['birthDate']);
         $query->bindValue(5, sha1($params['password']));
+        $query->bindValue(6, date('Y-m-d H:i:s'));
+        $query->bindValue(7, date('Y-m-d H:i:s'));
         $data = $query->executeQuery();
 
         return $data;
@@ -100,7 +102,7 @@ class UserRepository
      */
     public function update(string $email, array $params)
     {
-        $statement = "UPDATE users SET givenName = ?, familyName = ?, email = ?, birthDate = ?, password = ? WHERE email = '$email'";
+        $statement = "UPDATE users SET givenName = ?, familyName = ?, email = ?, birthDate = ?, password = ?, updatedAt = ? WHERE email = '$email'";
         
         $query = $this->connection->prepare($statement);
         $query->bindValue(1, $params['givenName']);
@@ -108,6 +110,7 @@ class UserRepository
         $query->bindValue(3, $params['email']);
         $query->bindValue(4, $params['birthDate']);
         $query->bindValue(5, sha1($params['password']));
+        $query->bindValue(6, date('Y-m-d H:i:s'));
         $data = $query->executeQuery();
 
         return $data;
