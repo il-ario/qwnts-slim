@@ -16,7 +16,14 @@ class UpdateUserAction extends UserAction
         $email = $this->resolveArg('email');
         $parsedBody = $request->getParsedBody();
 
-        $data = $this->userRepository->update($email, $parsedBody);
+        $data = $this->userRepository->getEmail($email);
+
+        if (empty($data)) {
+            return $this->respondWithData(['error' => 'Incorrect data.'])->withHeader('Content-Type', 'application/json')->withStatus(404);
+        }
+
+        $this->userRepository->update($email, $parsedBody);
+        $data = $this->userRepository->getEmail($email);
 
         return $this->respondWithData($data)->withHeader('Content-Type', 'application/json')->withStatus(200);
     }

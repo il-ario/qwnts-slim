@@ -15,7 +15,7 @@ class GetUserAction extends UserAction
     {
         $email = $this->resolveArg('email');
         
-        $data = $this->userRepository->get($email);
+        $data = $this->userRepository->getEmail($email);
 
         return $this->respondWithData($data)->withHeader('Content-Type', 'application/json')->withStatus(200);
     }

@@ -16,7 +16,14 @@ class UpdatePostAction extends PostAction
         $parsedBody = $request->getParsedBody();
         $id = $this->resolveArg('id');
 
-        $data = $this->postRepository->update((int) $id, $parsedBody);
+        $data = $this->postRepository->get((int) $id);
+
+        if (empty($data)) {
+            return $this->respondWithData(['error' => 'Incorrect data.'])->withHeader('Content-Type', 'application/json')->withStatus(404);
+        }
+
+        $this->postRepository->update((int) $id, $parsedBody);
+        $data = $this->postRepository->get((int) $id);
 
         return $this->respondWithData($data)->withHeader('Content-Type', 'application/json')->withStatus(200);
     }

@@ -17,14 +17,6 @@ class User extends DataTransferObject implements JsonSerializable
 
     private string $lastName;
 
-    public function __construct(?int $id, string $username, string $firstName, string $lastName)
-    {
-        $this->id = $id;
-        $this->username = strtolower($username);
-        $this->firstName = ucfirst($firstName);
-        $this->lastName = ucfirst($lastName);
-    }
-
     public function getId(): ?int
     {
         return $this->id;

@@ -39,7 +39,7 @@ class PostRepository implements PostRepositoryInterface
         }
         
         $query = $this->connection->prepare($statement);
-        $data = $query->executeQuery();
+        $data = $query->executeQuery()->fetchAllAssociative();
 
         return $data;
     }
@@ -51,17 +51,15 @@ class PostRepository implements PostRepositoryInterface
      */
     public function store(array $params)
     {
-        $statement = "INSERT INTO posts (title, body, status, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?)";
-        
-        $query = $this->connection->prepare($statement);
-        $query->bindValue(1, $params['title']);
-        $query->bindValue(2, $params['body']);
-        $query->bindValue(3, $params['status']);
-        $query->bindValue(4, date('Y-m-d H:i:s'));
-        $query->bindValue(5, date('Y-m-d H:i:s'));
-        $data = $query->executeQuery();
+        $this->connection->insert('posts', [
+            'title' => $params['title'],
+            'body' => $params['body'],
+            'status' => $params['status'],
+            'createdAt' => date('Y-m-d H:i:s'),
+            'updatedAt' => date('Y-m-d H:i:s')
+        ]);
 
-        return $data;
+        return $this->connection->lastInsertId();
     }
 
     /**
@@ -72,7 +70,7 @@ class PostRepository implements PostRepositoryInterface
     public function get(int $id)
     {
         $query = $this->connection->prepare("SELECT * FROM posts WHERE id = '$id'");
-        $data = $query->executeQuery();
+        $data = $query->executeQuery()->fetchAllAssociative();
 
         return $data;
     }
@@ -85,14 +83,14 @@ class PostRepository implements PostRepositoryInterface
      */
     public function update(int $id, array $params)
     {
-        $statement = "UPDATE posts SET title = ?, body = ?, status = ?, updatedAt = ? WHERE id = $id";
-        
-        $query = $this->connection->prepare($statement);
-        $query->bindValue(1, $params['title']);
-        $query->bindValue(2, $params['body']);
-        $query->bindValue(3, $params['status']);
-        $query->bindValue(4, date('Y-m-d H:i:s'));
-        $data = $query->executeQuery();
+        $data = $this->connection->update('posts', [
+            'title' => $params['title'],
+            'body' => $params['body'],
+            'status' => $params['status'],
+            'updatedAt' => date('Y-m-d H:i:s'),
+        ], [
+            'id' => $id
+        ]);
 
         return $data;
     }

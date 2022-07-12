@@ -13,20 +13,12 @@ class Post extends DataTransferObject implements JsonSerializable
     private ?int $id;
 
     #[StringNotEmpty]
-    public string $title;
+    public ?string $title;
 
     #[StringNotEmpty]
     public string $body;
 
     private string $status;
-
-    // public function __construct(?int $id, string $title, string $body, string $status)
-    // {
-    //     $this->id = $id;
-    //     $this->title = $title;
-    //     $this->body = $body;
-    //     $this->status = $status;
-    // }
 
     public function getId(): ?int
     {

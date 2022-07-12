@@ -19,7 +19,7 @@ class LoginUserAction extends UserAction
         $email = $parsedBody['email'];
         $password = $parsedBody['password'];
 
-        $data = $this->userRepository->get($email);
+        $data = $this->userRepository->getEmail($email);
 
         if (sha1($password) != $data[0]['password']) {
             return $this->respondWithData($data)->withHeader('Content-Type', 'application/json')->withStatus(401);

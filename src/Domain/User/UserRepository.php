@@ -52,7 +52,7 @@ class UserRepository implements UserRepositoryInterface
         }
 
         $query = $this->connection->prepare($statement);
-        $data = $query->executeQuery();
+        $data = $query->executeQuery()->fetchAllAssociative();
 
         return $data;
     }
@@ -64,32 +64,45 @@ class UserRepository implements UserRepositoryInterface
      */
     public function store(array $params)
     {
-        $statement = "INSERT INTO users (givenName, familyName, email, birthDate, password, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        
+        $this->connection->insert('users', [
+            'givenName' => $params['givenName'],
+            'familyName' => $params['familyName'],
+            'email' => $params['email'],
+            'birthDate' => $params['birthDate'],
+            'password' => $params['password'],
+            'createdAt' => date('Y-m-d H:i:s'),
+            'updatedAt' => date('Y-m-d H:i:s')
+        ]);
+
+        return $this->connection->lastInsertId();
+    }
+
+    /**
+     * Get a user via id
+     * 
+     * @param string $id
+     */
+    public function get(int $id)
+    {
+        $statement = "SELECT * FROM users WHERE id = '$id'";
+
         $query = $this->connection->prepare($statement);
-        $query->bindValue(1, $params['givenName']);
-        $query->bindValue(2, $params['familyName']);
-        $query->bindValue(3, $params['email']);
-        $query->bindValue(4, $params['birthDate']);
-        $query->bindValue(5, sha1($params['password']));
-        $query->bindValue(6, date('Y-m-d H:i:s'));
-        $query->bindValue(7, date('Y-m-d H:i:s'));
-        $data = $query->executeQuery();
+        $data = $query->executeQuery()->fetchAllAssociative();
 
         return $data;
     }
 
     /**
-     * Get a user via email
+     * Get a user
      * 
      * @param string $email
      */
-    public function get(string $email)
+    public function getEmail(string $email)
     {
         $statement = "SELECT * FROM users WHERE email = '$email'";
 
         $query = $this->connection->prepare($statement);
-        $data = $query->executeQuery();
+        $data = $query->executeQuery()->fetchAllAssociative();
 
         return $data;
     }
@@ -102,16 +115,16 @@ class UserRepository implements UserRepositoryInterface
      */
     public function update(string $email, array $params)
     {
-        $statement = "UPDATE users SET givenName = ?, familyName = ?, email = ?, birthDate = ?, password = ?, updatedAt = ? WHERE email = '$email'";
-        
-        $query = $this->connection->prepare($statement);
-        $query->bindValue(1, $params['givenName']);
-        $query->bindValue(2, $params['familyName']);
-        $query->bindValue(3, $params['email']);
-        $query->bindValue(4, $params['birthDate']);
-        $query->bindValue(5, sha1($params['password']));
-        $query->bindValue(6, date('Y-m-d H:i:s'));
-        $data = $query->executeQuery();
+        $data = $this->connection->update('users', [
+            'givenName' => $params['givenName'],
+            'familyName' => $params['familyName'],
+            'email' => $params['email'],
+            'birthDate' => $params['birthDate'],
+            'password' => $params['password'],
+            'updatedAt' => date('Y-m-d H:i:s'),
+        ], [
+            'email' => $email
+        ]);
 
         return $data;
     }

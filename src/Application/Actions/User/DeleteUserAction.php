@@ -17,6 +17,6 @@ class DeleteUserAction extends UserAction
 
         $data = $this->userRepository->delete($email);
 
-        return $this->respondWithData($data)->withHeader('Content-Type', 'application/json')->withStatus(200);
+        return $this->respondWithData(['success' => 'User deleted.'])->withHeader('Content-Type', 'application/json')->withStatus(200);
     }
 }

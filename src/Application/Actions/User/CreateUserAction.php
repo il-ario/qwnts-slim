@@ -15,7 +15,8 @@ class CreateUserAction extends UserAction
     {
         $parsedBody = $request->getParsedBody();
 
-        $data = $this->userRepository->store($parsedBody);
+        $lastInsertId = $this->userRepository->store($parsedBody);
+        $data = $this->userRepository->get((int) $lastInsertId);
         
         return $this->respondWithData($data)->withHeader('Content-Type', 'application/json')->withStatus(200);
     }

@@ -22,9 +22,8 @@ class CreatePostAction extends PostAction
             status: $parsedBody['status']
         );
 
-        var_dump($post);
-
-        $data = $this->postRepository->store($parsedBody);
+        $lastInsertId = $this->postRepository->store($parsedBody);
+        $data = $this->postRepository->get((int) $lastInsertId);
         
         return $this->respondWithData($data)->withHeader('Content-Type', 'application/json')->withStatus(200);
     }

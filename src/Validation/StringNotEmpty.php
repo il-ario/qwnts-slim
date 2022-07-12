@@ -13,7 +13,6 @@ class StringNotEmpty implements Validator
 {
     public function validate(mixed $value): ValidationResult
     {
-        var_dump($value);
         if ($value == null || $value == '') {
             return ValidationResult::invalid("Value cannot be empty");
         }
