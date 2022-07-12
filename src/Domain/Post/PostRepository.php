@@ -39,7 +39,7 @@ class PostRepository implements PostRepositoryInterface
         }
         
         $query = $this->connection->prepare($statement);
-        $data = $query->execute()->fetchAll(\PDO::FETCH_ASSOC);
+        $data = $query->executeQuery();
 
         return $data;
     }
@@ -72,8 +72,7 @@ class PostRepository implements PostRepositoryInterface
     public function get(int $id)
     {
         $query = $this->connection->prepare("SELECT * FROM posts WHERE id = '$id'");
-        $query->execute();
-        $data = $query->fetchAll(\PDO::FETCH_ASSOC);
+        $data = $query->executeQuery();
 
         return $data;
     }

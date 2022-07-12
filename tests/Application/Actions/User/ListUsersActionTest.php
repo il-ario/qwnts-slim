@@ -9,7 +9,7 @@ use App\Domain\User\User;
 use DI\Container;
 use Tests\TestCase;
 
-class ListUserActionTest extends TestCase
+class ListUsersActionTest extends TestCase
 {
     public function testAction()
     {

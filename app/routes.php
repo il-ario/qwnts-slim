@@ -27,8 +27,8 @@ return function (App $app) {
      */
     $app->group('/users', function (Group $group) {
         $group->get('', \App\Application\Actions\User\ListUsersAction::class);
-        $group->post('', \App\Application\Actions\User\StoreUserAction::class);
-        $group->get('/{email}', \App\Application\Actions\User\ViewUserAction::class);
+        $group->post('', \App\Application\Actions\User\CreateUserAction::class);
+        $group->get('/{email}', \App\Application\Actions\User\GetUserAction::class);
         $group->put('/{email}', \App\Application\Actions\User\UpdateUserAction::class);
         $group->delete('/{email}', \App\Application\Actions\User\DeleteUserAction::class);
     });
@@ -38,8 +38,8 @@ return function (App $app) {
      */
     $app->group('/posts', function (Group $group) {
         $group->get('', \App\Application\Actions\Post\ListPostsAction::class);
-        $group->post('', \App\Application\Actions\Post\StorePostAction::class);
-        $group->get('/{id}', \App\Application\Actions\Post\ViewPostAction::class);
+        $group->post('', \App\Application\Actions\Post\CreatePostAction::class);
+        $group->get('/{id}', \App\Application\Actions\Post\GetPostAction::class);
         $group->put('/{id}', \App\Application\Actions\Post\UpdatePostAction::class);
     });
 };

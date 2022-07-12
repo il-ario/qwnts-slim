@@ -52,7 +52,7 @@ class UserRepository implements UserRepositoryInterface
         }
 
         $query = $this->connection->prepare($statement);
-        $data = $query->execute()->fetchAll(\PDO::FETCH_ASSOC);
+        $data = $query->executeQuery();
 
         return $data;
     }
@@ -89,7 +89,7 @@ class UserRepository implements UserRepositoryInterface
         $statement = "SELECT * FROM users WHERE email = '$email'";
 
         $query = $this->connection->prepare($statement);
-        $data = $query->execute()->fetchAll(\PDO::FETCH_ASSOC);
+        $data = $query->executeQuery();
 
         return $data;
     }

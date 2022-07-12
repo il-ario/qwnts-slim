@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Domain\Post;
 
+use App\Validation\StringNotEmpty;
 use JsonSerializable;
-use App\Domain\Post\Validation\StringNotEmpty;
 use Spatie\DataTransferObject\DataTransferObject;
 
 class Post extends DataTransferObject implements JsonSerializable
@@ -20,13 +20,13 @@ class Post extends DataTransferObject implements JsonSerializable
 
     private string $status;
 
-    public function __construct(?int $id, string $title, string $body, string $status)
-    {
-        $this->id = $id;
-        $this->title = $title;
-        $this->body = $body;
-        $this->status = $status;
-    }
+    // public function __construct(?int $id, string $title, string $body, string $status)
+    // {
+    //     $this->id = $id;
+    //     $this->title = $title;
+    //     $this->body = $body;
+    //     $this->status = $status;
+    // }
 
     public function getId(): ?int
     {

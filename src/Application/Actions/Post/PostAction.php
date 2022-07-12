@@ -17,8 +17,5 @@ abstract class PostAction extends Action
     {
         parent::__construct($logger, $container);
         $this->postRepository = $postRepository;
-        $this->tableName = 'posts';
     }
 }
-
-
