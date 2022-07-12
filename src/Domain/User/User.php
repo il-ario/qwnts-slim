@@ -4,37 +4,63 @@ declare(strict_types=1);
 
 namespace App\Domain\User;
 
-use JsonSerializable;
+use App\Validation\StringNotEmpty;
 use Spatie\DataTransferObject\DataTransferObject;
 
-class User extends DataTransferObject implements JsonSerializable
+class User extends DataTransferObject implements \JsonSerializable
 {
     private ?int $id;
 
-    private string $username;
+    #[StringNotEmpty]
+    public string $givenName;
 
-    private string $firstName;
+    #[StringNotEmpty]
+    public string $familyName;
 
-    private string $lastName;
+    #[StringNotEmpty]
+    public string $email;
+
+    #[StringNotEmpty]
+    public string $password;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getUsername(): string
+    public function getGivenName(): string
     {
-        return $this->username;
+        return $this->givenName;
     }
 
-    public function getFirstName(): string
+    public function getFamilyName(): string
     {
-        return $this->firstName;
+        return $this->familyName;
     }
 
-    public function getLastName(): string
+    public function getBirthDate(): \DateTime
     {
-        return $this->lastName;
+        return $this->birthDate;
+    }
+
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
+
+    public function getCreatedAt(): string
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): string
+    {
+        return $this->updatedAt;
     }
 
     #[\ReturnTypeWillChange]
@@ -42,9 +68,13 @@ class User extends DataTransferObject implements JsonSerializable
     {
         return [
             'id' => $this->id,
-            'username' => $this->username,
-            'firstName' => $this->firstName,
-            'lastName' => $this->lastName,
+            'givenName' => $this->givenName,
+            'familyName' => $this->familyName,
+            'email' => $this->email,
+            'birthDate' => $this->birthDate,
+            'password' => $this->password,
+            'createdAt' => $this->createdAt,
+            'updatedAt' => $this->updatedAt,
         ];
     }
 }

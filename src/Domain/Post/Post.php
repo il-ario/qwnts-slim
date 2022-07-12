@@ -5,20 +5,22 @@ declare(strict_types=1);
 namespace App\Domain\Post;
 
 use App\Validation\StringNotEmpty;
-use JsonSerializable;
+use App\Validation\ValidPostStatus;
 use Spatie\DataTransferObject\DataTransferObject;
 
-class Post extends DataTransferObject implements JsonSerializable
+class Post extends DataTransferObject implements \JsonSerializable
 {
     private ?int $id;
 
     #[StringNotEmpty]
-    public ?string $title;
+    public string $title;
 
     #[StringNotEmpty]
     public string $body;
 
-    private string $status;
+    #[StringNotEmpty]
+    #[ValidPostStatus]
+    public string $status;
 
     public function getId(): ?int
     {
@@ -40,6 +42,16 @@ class Post extends DataTransferObject implements JsonSerializable
         return $this->status;
     }
 
+    public function getCreatedAt(): string
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): string
+    {
+        return $this->updatedAt;
+    }
+
     #[\ReturnTypeWillChange]
     public function jsonSerialize(): array
     {
@@ -48,6 +60,8 @@ class Post extends DataTransferObject implements JsonSerializable
             'title' => $this->title,
             'body' => $this->body,
             'status' => $this->status,
+            'createdAt' => $this->createdAt,
+            'updatedAt' => $this->updatedAt
         ];
     }
 }
